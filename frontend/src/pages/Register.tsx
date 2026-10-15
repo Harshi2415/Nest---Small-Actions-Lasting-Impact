@@ -1,0 +1,228 @@
+import { ArrowLeft, ArrowRight, Leaf, LockKeyhole, Mail, UserRound } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import BackToNest from "../components/common/BackToNext";
+
+export default function Register() {
+  const navigate = useNavigate();
+
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    password: "",
+  });
+
+  const [error, setError] = useState("");
+
+  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+    setForm({
+      ...form,
+      [e.target.name]: e.target.value,
+    });
+  }
+
+  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+
+    if (!form.name || !form.email || !form.password) {
+      setError("Please fill in all fields.");
+      return;
+    }
+
+    if (form.password.length < 6) {
+      setError("Password must be at least 6 characters.");
+      return;
+    }
+
+    localStorage.setItem(
+      "nest_user",
+      JSON.stringify({
+        name: form.name,
+        email: form.email,
+      })
+    );
+
+    localStorage.setItem("nest_logged_in", "true");
+
+    navigate("/profile");
+  }
+
+  return (
+    <main className="min-h-screen bg-[#f7f4ec] text-[#173f32]">
+      <div className="grid min-h-screen lg:grid-cols-2">
+        {/* Left side */}
+        <section className="relative hidden overflow-hidden bg-[#173f32] lg:flex">
+          <div className="absolute -left-32 top-20 h-96 w-96 rounded-full bg-[#315c49]/40 blur-3xl" />
+          <div className="absolute -bottom-40 -right-20 h-[32rem] w-[32rem] rounded-full bg-[#557861]/25 blur-3xl" />
+
+          <div className="relative z-10 flex w-full flex-col justify-between p-12 xl:p-16">
+            <BackToNest />
+
+            <div className="max-w-xl">
+              <Leaf
+                size={32}
+                strokeWidth={1.4}
+                className="mb-8 text-[#b9d4bc]"
+              />
+
+              <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#9db5a4]">
+                Join the moment
+              </p>
+
+              <h1 className="mt-5 font-display text-5xl font-semibold leading-tight text-white xl:text-6xl">
+                Small actions become bigger when we share them.
+              </h1>
+
+              <p className="mt-6 max-w-lg text-base leading-7 text-[#b8c9bd]">
+                Create your NEST profile, discover communities, share your
+                small wins, and find people who care about the same things you
+                do.
+              </p>
+            </div>
+
+            <p className="text-xs text-[#81988a]">
+              A place for everyday actions that matter.
+            </p>
+          </div>
+        </section>
+
+        {/* Form */}
+        <section className="flex items-center justify-center px-6 py-12 sm:px-10">
+          <div className="w-full max-w-md">
+            <div className="mb-10 lg:hidden">
+              <Link
+                to="/"
+                className="inline-flex items-center gap-2 text-sm font-medium text-[#587064]"
+              >
+                <ArrowLeft size={16} />
+                Back to NEST
+              </Link>
+            </div>
+
+            <div>
+              <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#6b8879]">
+                Create your account
+              </p>
+
+              <h2 className="mt-3 font-display text-4xl font-semibold text-[#173f32]">
+                Welcome to NEST.
+              </h2>
+
+              <p className="mt-3 text-sm leading-6 text-[#718177]">
+                Start with a few details. You can complete your profile after
+                joining.
+              </p>
+            </div>
+
+            <form onSubmit={handleSubmit} className="mt-9 space-y-5">
+              {/* Name */}
+              <div>
+                <label
+                  htmlFor="name"
+                  className="mb-2 block text-sm font-medium text-[#355443]"
+                >
+                  Your name
+                </label>
+
+                <div className="flex items-center gap-3 rounded-2xl border border-[#d4ddd3] bg-white/65 px-4 py-3.5 transition focus-within:border-[#789681] focus-within:bg-white">
+                  <UserRound size={18} className="text-[#789083]" />
+
+                  <input
+                    id="name"
+                    name="name"
+                    type="text"
+                    value={form.name}
+                    onChange={handleChange}
+                    placeholder="Enter your name"
+                    className="w-full bg-transparent text-sm text-[#294438] outline-none placeholder:text-[#9aa79e]"
+                  />
+                </div>
+              </div>
+
+              {/* Email */}
+              <div>
+                <label
+                  htmlFor="email"
+                  className="mb-2 block text-sm font-medium text-[#355443]"
+                >
+                  Email address
+                </label>
+
+                <div className="flex items-center gap-3 rounded-2xl border border-[#d4ddd3] bg-white/65 px-4 py-3.5 transition focus-within:border-[#789681] focus-within:bg-white">
+                  <Mail size={18} className="text-[#789083]" />
+
+                  <input
+                    id="email"
+                    name="email"
+                    type="email"
+                    value={form.email}
+                    onChange={handleChange}
+                    placeholder="you@example.com"
+                    className="w-full bg-transparent text-sm text-[#294438] outline-none placeholder:text-[#9aa79e]"
+                  />
+                </div>
+              </div>
+
+              {/* Password */}
+              <div>
+                <label
+                  htmlFor="password"
+                  className="mb-2 block text-sm font-medium text-[#355443]"
+                >
+                  Password
+                </label>
+
+                <div className="flex items-center gap-3 rounded-2xl border border-[#d4ddd3] bg-white/65 px-4 py-3.5 transition focus-within:border-[#789681] focus-within:bg-white">
+                  <LockKeyhole size={18} className="text-[#789083]" />
+
+                  <input
+                    id="password"
+                    name="password"
+                    type="password"
+                    value={form.password}
+                    onChange={handleChange}
+                    placeholder="At least 6 characters"
+                    className="w-full bg-transparent text-sm text-[#294438] outline-none placeholder:text-[#9aa79e]"
+                  />
+                </div>
+              </div>
+
+              {error && (
+                <p className="rounded-xl bg-[#f3dfd8] px-4 py-3 text-sm text-[#8b4c3e]">
+                  {error}
+                </p>
+              )}
+
+              <button
+                type="submit"
+                className="group flex w-full items-center justify-center gap-2 rounded-full bg-[#285b49] px-6 py-3.5 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:bg-[#214d3e]"
+              >
+                Create my profile
+
+                <ArrowRight
+                  size={17}
+                  className="transition-transform group-hover:translate-x-0.5"
+                />
+              </button>
+            </form>
+
+            <p className="mt-7 text-center text-sm text-[#718177]">
+              Already part of NEST?{" "}
+              <Link
+                to="/login"
+                className="font-semibold text-[#285b49] hover:underline"
+              >
+                Log in
+              </Link>
+            </p>
+
+            <p className="mt-8 text-center text-xs leading-5 text-[#98a39c]">
+              By creating an account, you agree to participate respectfully in
+              the NEST community.
+            </p>
+          </div>
+        </section>
+      </div>
+    </main>
+  );
+}
